@@ -247,6 +247,7 @@ function TaskList({ onEdit }) {
                       size="small"
                       type="button"
                       variant="contained"
+                      className={`priority-button ${selected ? 'priority-selected' : ''}`}
                       aria-pressed={selected}
                       aria-label={`Set priority to ${level} for ${task.title}`}
                       onClick={() => handlePriorityChange(task, level)}
@@ -257,11 +258,7 @@ function TaskList({ onEdit }) {
                         borderRadius: 1.5,
                         fontWeight: 700,
                         fontSize: '0.7rem',
-                        backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
-                        color: selected ? '#0f172a' : '#ffffff',
-                        '&:hover': {
-                          backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
-                        }
+                        '&:hover': {}
                       }}
                     >
                       {level}

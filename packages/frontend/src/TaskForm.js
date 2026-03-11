@@ -161,15 +161,12 @@ function TaskForm({ onSave, initialTask }) {
                   variant="contained"
                   onClick={() => setPriority(level)}
                   data-testid={`priority-${level}`}
+                  className={`priority-button ${selected ? 'priority-selected' : ''}`}
                   sx={{
                     minWidth: 54,
                     borderRadius: 2,
-                    backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
-                    color: selected ? '#0f172a' : '#ffffff',
                     fontWeight: 700,
-                    '&:hover': {
-                      backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
-                    }
+                    '&:hover': {}
                   }}
                 >
                   {level}

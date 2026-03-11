@@ -92,3 +92,26 @@ li:last-child {
   color: #d32f2f;
   font-weight: bold;
 }
+
+:root {
+  --priority-selected: #07F2E6;
+  --priority-unselected: #7A7A7A;
+}
+
+.priority-button {
+  background-color: var(--priority-unselected) !important;
+  color: #ffffff !important;
+}
+
+.priority-button:hover {
+  background-color: var(--priority-unselected) !important;
+}
+
+.priority-button.priority-selected {
+  background-color: var(--priority-selected) !important;
+  color: #0f172a !important;
+}
+
+.priority-button.priority-selected:hover {
+  background-color: var(--priority-selected) !important;
+}
