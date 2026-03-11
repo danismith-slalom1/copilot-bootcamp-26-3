@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  List, ListItem, ListItemText, IconButton, Checkbox, Typography, Box, CircularProgress, Paper, Chip
+  List, ListItem, ListItemText, IconButton, Checkbox, Typography, Box, CircularProgress, Paper, Chip, Button
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
+
+const PRIORITY_LEVELS = ['P1', 'P2', 'P3'];
 
 function TaskList({ onEdit }) {
   const [tasks, setTasks] = useState([]);
@@ -33,7 +35,7 @@ function TaskList({ onEdit }) {
       const response = await fetch('/api/tasks');
       if (!response.ok) throw new Error('Failed to fetch tasks');
       const data = await response.json();
-      setTasks(data);
+      setTasks(data.map((task) => ({ ...task, priority: task.priority || 'P3' })));
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -61,6 +63,22 @@ function TaskList({ onEdit }) {
       fetchTasks();
     } catch (err) {
       setError('Failed to delete task');
+    }
+  };
+
+  const handlePriorityChange = async (task, nextPriority) => {
+    if (task.priority === nextPriority) {
+      return;
+    }
+    try {
+      await fetch(`/api/tasks/${task.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priority: nextPriority })
+      });
+      fetchTasks();
+    } catch (err) {
+      setError('Failed to update task priority');
     }
   };
 
@@ -220,6 +238,37 @@ function TaskList({ onEdit }) {
                   }}
                 />
               )}
+              <Box sx={{ display: 'flex', gap: 0.5 }}>
+                {PRIORITY_LEVELS.map((level) => {
+                  const selected = (task.priority || 'P3') === level;
+                  return (
+                    <Button
+                      key={level}
+                      size="small"
+                      type="button"
+                      variant="contained"
+                      aria-pressed={selected}
+                      aria-label={`Set priority to ${level} for ${task.title}`}
+                      onClick={() => handlePriorityChange(task, level)}
+                      sx={{
+                        minWidth: 40,
+                        py: 0.25,
+                        px: 0.75,
+                        borderRadius: 1.5,
+                        fontWeight: 700,
+                        fontSize: '0.7rem',
+                        backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
+                        color: selected ? '#0f172a' : '#ffffff',
+                        '&:hover': {
+                          backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
+                        }
+                      }}
+                    >
+                      {level}
+                    </Button>
+                  );
+                })}
+              </Box>
               <Box 
                 sx={{ 
                   display: 'flex', 

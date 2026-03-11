@@ -7,6 +7,7 @@ function TaskForm({ onSave, initialTask }) {
   const [title, setTitle] = useState(initialTask?.title || '');
   const [description, setDescription] = useState(initialTask?.description || '');
   const [dueDate, setDueDate] = useState(initialTask?.due_date || '');
+  const [priority, setPriority] = useState(initialTask?.priority || 'P3');
   const [error, setError] = useState(null);
 
   // Helper to normalize date string to YYYY-MM-DD format
@@ -30,10 +31,12 @@ function TaskForm({ onSave, initialTask }) {
       setTitle(initialTask.title || '');
       setDescription(initialTask.description || '');
       setDueDate(normalizeDateString(initialTask.due_date));
+      setPriority(initialTask.priority || 'P3');
     } else {
       setTitle('');
       setDescription('');
       setDueDate('');
+      setPriority('P3');
     }
   }, [initialTask]);
 
@@ -44,10 +47,11 @@ function TaskForm({ onSave, initialTask }) {
       return;
     }
     setError(null);
-    await onSave({ title, description, due_date: dueDate });
+    await onSave({ title, description, due_date: dueDate, priority });
     setTitle('');
     setDescription('');
     setDueDate('');
+    setPriority('P3');
   };
 
   return (
@@ -143,6 +147,37 @@ function TaskForm({ onSave, initialTask }) {
             }
           }}
         />
+        <Box>
+          <Typography variant="body2" sx={{ mb: 0.75, color: '#424242', fontWeight: 500 }}>
+            Priority
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {['P1', 'P2', 'P3'].map((level) => {
+              const selected = priority === level;
+              return (
+                <Button
+                  key={level}
+                  type="button"
+                  variant="contained"
+                  onClick={() => setPriority(level)}
+                  data-testid={`priority-${level}`}
+                  sx={{
+                    minWidth: 54,
+                    borderRadius: 2,
+                    backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
+                    color: selected ? '#0f172a' : '#ffffff',
+                    fontWeight: 700,
+                    '&:hover': {
+                      backgroundColor: selected ? '#07F2E6' : '#7A7A7A',
+                    }
+                  }}
+                >
+                  {level}
+                </Button>
+              );
+            })}
+          </Box>
+        </Box>
         {error && <Typography color="error" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{error}</Typography>}
         <Box display="flex" gap={2}>
           <Button 
